@@ -1,0 +1,15 @@
+#调用服务
+dubbo:
+  application:
+    name: stu_web
+    owner: qzk
+  registry:
+    address: zookeeper://192.168.26.129:2181
+  consumer:
+    timeout: 30000
+    check: false
+    retries: 3
+#tomcat服务端口
+server:
+  port: 8082
+

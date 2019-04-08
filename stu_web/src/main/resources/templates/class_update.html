@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <base th:href="${#request.getContextPath()}+'/'">
+    <meta charset="UTF-8">
+    <title>修改班级信息</title>
+    <script type="text/javascript" th:src="@{jquery/1.9.1/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{layer/1.9.3/layer.js}"></script>
+    <script type="text/javascript" th:src="@{my.js}"></script>
+</head>
+<body>
+<form method="post" action="" id="update">
+    <input type="hidden" name="id" th:value="${c.id}"/>
+    班级名称：<input type="text" name="className" th:value="${c.className}"/><br/>
+    班级人数：<input type="text" name="sum" th:value="${c.sum}"/><br/>
+    班级状态：
+        <select name="flag" id="flag">
+            <option value="1" th:field="${c.flag}">存在</option>
+            <option value="0" th:field="${c.flag}">不存在</option>
+        </select>
+    <input type="button" id="btn" value="修改"/>
+</form>
+</body>
+<script type="text/javascript">
+    $(function () {
+        $("#btn").click(function () {
+            $.ajax({
+                type:"POST",
+                url:"class/update",
+                data:$("#update").serialize(),
+                success:function (data) {
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.layer.alert(data.data,function () {
+                        parent.location.reload();
+                        parent.layer.close(index);
+                    });
+                }
+            })
+        })
+    })
+</script>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <base th:href="${#request.getContextPath()}+'/'">
+    <meta charset="UTF-8">
+    <title>添加学生信息</title>
+    <script type="text/javascript" th:src="@{jquery/1.9.1/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{layer/1.9.3/layer.js}"></script>
+    <script type="text/javascript" th:src="@{my.js}"></script>
+    <script>
+        $(function () {
+            $("#btn").click(function () {
+                $.ajax({
+                    type:"POST",
+                    url:"stu/add",
+                    data:$("#add").serialize(),
+                    success:function (data) {
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.layer.alert(data.data,function () {
+                            parent.location.reload();
+                            parent.layer.close(index);
+                        });
+                    }
+                })
+            })
+        })
+    </script>
+</head>
+<body>
+    <form method="post" action="" id="add" onsubmit="return false">
+        <input type="hidden" name="id" value="0"/>
+        学生姓名：<input type="text" name="name"/>
+        学生年龄：<input type="text" name="age"/>
+        所属班级：
+            <select name="classId">
+                <option value="-1">请选择班级</option>
+                <option th:each="c:${classes}" th:value="${c.id}" th:text="${c.className}"></option>
+            </select>
+        <input type="hidden" name="flag" value="1"/>
+        <input type="button" id="btn" value="添加"/>
+    </form>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <base th:href="${#request.getContextPath()}+'/'">
+    <meta charset="UTF-8">
+    <title>修改学生信息</title>
+    <script type="text/javascript" th:src="@{jquery/1.9.1/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{layer/1.9.3/layer.js}"></script>
+    <script type="text/javascript" th:src="@{my.js}"></script>
+    <script type="text/javascript">
+        $(function () {
+            $("#btn").click(function () {
+                $.ajax({
+                    type:"POST",
+                    url:"stu/update",
+                    data:$("#update").serialize(),
+                    success:function (data) {
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.layer.alert(data.data,function () {
+                            parent.location.reload();
+                            parent.layer.close(index);
+                        });
+                    }
+                })
+            })
+        })
+    </script>
+</head>
+<body>
+<form method="post" action="" id="update" onsubmit="return false">
+    <input type="hidden" name="id" th:value="${stu.id}"/>
+    学生姓名：<input type="text" name="name" th:value="${stu.name}"/>
+    学生年龄：<input type="text" name="age" th:value="${stu.age}"/>
+    所属班级：
+    <select name="classId" id="classId">
+        <option value="-1">请选择班级</option>
+        <th:block th:each="c:${classes}">
+            <th:block th:if="${c.id}==${stu.classId}">
+                <option th:selected="selected" th:value="${c.id}" th:text="${c.className}"></option>
+            </th:block>
+            <th:block th:unless="${c.id}==${stu.classId}">
+                <option th:value="${c.id}" th:text="${c.className}"></option>
+            </th:block>
+        </th:block>
+    </select>
+    学生状态：<select name="flag" id="flag">
+        <option value="1" th:field="${stu.flag}">存在</option>
+        <option value="0" th:field="${stu.flag}">不存在</option>
+    </select>
+    <input type="button" id="btn" value="修改"/>
+</form>
+</body>
+</html>

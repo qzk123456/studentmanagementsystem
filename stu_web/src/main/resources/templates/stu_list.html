@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <base th:href="${#request.getContextPath()}+'/'">
+    <meta charset="UTF-8">
+    <title>显示所有学生信息</title>
+    <script type="text/javascript" th:src="@{jquery/1.9.1/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{layer/1.9.3/layer.js}"></script>
+    <script type="text/javascript" th:src="@{my.js}"></script>
+    <script type="text/javascript">
+        function add(title, url, w, h) {
+            layer_show(title, url, w, h);
+        }
+        function update(title, url, id) {
+            url = url+"?id="+id;
+            layer_show(title, url);
+        }
+        function del(id) {
+            $.ajax({
+                type:"POST",
+                url:"stu/del?id="+id,
+                success:function (data) {
+                    layer.alert(data.data,function () {
+                        location.reload();
+                    });
+                }
+            })
+        }
+    </script>
+</head>
+<body>
+<table border="1px">
+    <tr>
+        <th colspan="6">学生信息表</th>
+    </tr>
+    <tr>
+        <th>学生编号</th>
+        <th>学生姓名</th>
+        <th>学生年龄</th>
+        <th>所属班级</th>
+        <th>学生状态</th>
+        <th>操作</th>
+    </tr>
+    <tr th:each="s : ${stus}">
+        <td th:text="${s.id}">班级编号</td>
+        <td th:text="${s.name}">学生姓名</td>
+        <td th:text="${s.age}">学生年龄</td>
+        <td th:text="${s.className}">所属班级</td>
+        <td th:text="${s.flag}?'存在':'不存在'">学生状态</td>
+        <td>
+            <a href="javascript:;" th:onclick="'javascript:update(&quot;编辑&quot;,&quot;stu/toUpdate&quot;,'+${s.id}+')'">编辑</a>
+            <a href="javascript:;" th:onclick="'javascript:del('+${s.id}+');'">删除</a>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="6">
+            <a href="javascript:;" onclick="add('添加','stu/toAdd', '800', '500')">添加</a>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

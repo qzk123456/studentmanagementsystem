@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <base th:href="${#request.getContextPath()}+'/'">
+    <meta charset="UTF-8">
+    <title>显示所有班级信息</title>
+    <script type="text/javascript" th:src="@{jquery/1.9.1/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{layer/1.9.3/layer.js}"></script>
+    <script type="text/javascript" th:src="@{my.js}"></script>
+    <script type="text/javascript">
+        function addClass(title, url, w, h) {
+            layer_show(title, url, w, h);
+        }
+        function update(title, url, id) {
+            url = url+"?id="+id;
+            layer_show(title, url);
+        }
+        function del(id) {
+            $.ajax({
+                type:"POST",
+                url:"class/del?id="+id,
+                success:function (data) {
+                    layer.alert(data.data,function () {
+                        location.reload();
+                    });
+                }
+            })
+        }
+    </script>
+</head>
+<body>
+    <table border="1px">
+        <tr>
+            <th colspan="5">班级信息表</th>
+        </tr>
+        <tr>
+            <th>班级编号</th>
+            <th>班级名称</th>
+            <th>班级人数</th>
+            <th>班级状态</th>
+            <th>操作</th>
+        </tr>
+        <tr th:each="c : ${classes}">
+            <td th:text="${c.id}">班级编号</td>
+            <td th:text="${c.className}">班级名称</td>
+            <td th:text="${c.sum}">班级人数</td>
+            <td th:text="${c.flag==true}?'存在':'不存在'">班级状态</td>
+            <td>
+                <a href="javascript:;" th:onclick="'javascript:update(&quot;编辑&quot;,&quot;class/toUpdate&quot;,'+${c.id}+')'">编辑</a>
+                <a href="javascript:;" th:onclick="'javascript:del('+${c.id}+');'">删除</a>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="5">
+                <a href="javascript:;" onclick="addClass('添加','class/toAdd', '800', '500')">添加</a>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
